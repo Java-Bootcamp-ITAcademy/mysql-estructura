@@ -216,7 +216,7 @@ CREATE TABLE IF NOT EXISTS `spotify`.`trackaddition` (
     REFERENCES `spotify`.`user` (`iduser`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `track`
+  CONSTRAINT `tracktrackaddition`
     FOREIGN KEY (`track`)
     REFERENCES `spotify`.`track` (`idtrack`)
     ON DELETE NO ACTION
@@ -232,12 +232,12 @@ CREATE TABLE IF NOT EXISTS `spotify`.`artistrelated` (
   `artistrelated` INT NOT NULL,
   PRIMARY KEY (`artist`, `artistrelated`),
   INDEX `artistrelated_idx` (`artistrelated` ASC) VISIBLE,
-  CONSTRAINT `artistartisrelated`
+  CONSTRAINT `artistartistrelated`
     FOREIGN KEY (`artist`)
     REFERENCES `spotify`.`artist` (`idartist`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `artistrelated`
+  CONSTRAINT `artistrelatedartist`
     FOREIGN KEY (`artistrelated`)
     REFERENCES `spotify`.`artist` (`idartist`)
     ON DELETE NO ACTION
@@ -282,6 +282,27 @@ CREATE TABLE IF NOT EXISTS `spotify`.`favouritetrack` (
   CONSTRAINT `userfavouritetrack`
     FOREIGN KEY (`user`)
     REFERENCES `spotify`.`user` (`iduser`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `spotify`.`userfollowingartist`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `spotify`.`userfollowingartist` (
+  `user` INT NOT NULL,
+  `artist` INT NOT NULL,
+  PRIMARY KEY (`user`, `artist`),
+  INDEX `artist_idx` (`artist` ASC) VISIBLE,
+  CONSTRAINT `useruserfollowingartist`
+    FOREIGN KEY (`user`)
+    REFERENCES `spotify`.`user` (`iduser`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `artistuserfollowingartist`
+    FOREIGN KEY (`artist`)
+    REFERENCES `spotify`.`artist` (`idartist`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

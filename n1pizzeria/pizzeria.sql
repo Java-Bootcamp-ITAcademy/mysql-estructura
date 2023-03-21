@@ -5,9 +5,6 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
--- Schema mydb
--- -----------------------------------------------------
--- -----------------------------------------------------
 -- Schema pizzeria
 -- -----------------------------------------------------
 
@@ -34,16 +31,16 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `pizzeria`.`clientaddress`
+-- Table `pizzeria`.`customeraddress`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `pizzeria`.`clientaddress` (
-  `idclientaddress` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `pizzeria`.`customeraddress` (
+  `idcustomeraddress` INT NOT NULL,
   `street` VARCHAR(45) NOT NULL,
   `number` VARCHAR(45) NOT NULL,
   `floor` VARCHAR(45) NULL DEFAULT NULL,
   `door` VARCHAR(45) NULL DEFAULT NULL,
-  PRIMARY KEY (`idclientaddress`),
-  UNIQUE INDEX `idadreça_UNIQUE` (`idclientaddress` ASC) VISIBLE)
+  PRIMARY KEY (`idcustomeraddress`),
+  UNIQUE INDEX `idadreça_UNIQUE` (`idcustomeraddress` ASC) VISIBLE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
@@ -88,7 +85,7 @@ CREATE TABLE IF NOT EXISTS `pizzeria`.`city` (
   PRIMARY KEY (`idcity`),
   UNIQUE INDEX `idlocalitat_UNIQUE` (`idcity` ASC) VISIBLE,
   INDEX `provincia_idx` (`province` ASC) VISIBLE,
-  CONSTRAINT `province`
+  CONSTRAINT `provincecity`
     FOREIGN KEY (`province`)
     REFERENCES `pizzeria`.`province` (`idprovince`))
 ENGINE = InnoDB
@@ -109,7 +106,7 @@ CREATE TABLE IF NOT EXISTS `pizzeria`.`shop` (
   UNIQUE INDEX `adreçabotiga_UNIQUE` (`shopaddress` ASC) VISIBLE,
   INDEX `adreçabotiga_idx` (`shopaddress` ASC) VISIBLE,
   INDEX `localitat_idx` (`city` ASC) VISIBLE,
-  CONSTRAINT `shopaddress`
+  CONSTRAINT `shopaddressshop`
     FOREIGN KEY (`shopaddress`)
     REFERENCES `pizzeria`.`shopaddress` (`idshopaddress`),
   CONSTRAINT `cityshop`
@@ -149,9 +146,9 @@ CREATE TABLE IF NOT EXISTS `pizzeria`.`customer` (
   UNIQUE INDEX `adreçaclient_UNIQUE` (`customeraddress` ASC) VISIBLE,
   INDEX `adreça_idx` (`customeraddress` ASC) VISIBLE,
   INDEX `localitat_idx` (`city` ASC) VISIBLE,
-  CONSTRAINT `customeraddress`
+  CONSTRAINT `customeraddresscustomer`
     FOREIGN KEY (`customeraddress`)
-    REFERENCES `pizzeria`.`clientaddress` (`idclientaddress`),
+    REFERENCES `pizzeria`.`customeraddress` (`idcustomeraddress`),
   CONSTRAINT `citycustomer`
     FOREIGN KEY (`city`)
     REFERENCES `pizzeria`.`city` (`idcity`))
@@ -174,7 +171,7 @@ CREATE TABLE IF NOT EXISTS `pizzeria`.`employee` (
   PRIMARY KEY (`idemployee`),
   UNIQUE INDEX `idempleat_UNIQUE` (`idemployee` ASC) VISIBLE,
   INDEX `botiga_idx` (`shop` ASC) VISIBLE,
-  CONSTRAINT `shop`
+  CONSTRAINT `shopemployee`
     FOREIGN KEY (`shop`)
     REFERENCES `pizzeria`.`shop` (`idshop`))
 ENGINE = InnoDB
@@ -211,7 +208,7 @@ CREATE TABLE IF NOT EXISTS `pizzeria`.`pizza` (
   PRIMARY KEY (`idpizza`),
   UNIQUE INDEX `idbeguda_UNIQUE` (`idpizza` ASC) VISIBLE,
   INDEX `categoria_idx` (`category` ASC) VISIBLE,
-  CONSTRAINT `category`
+  CONSTRAINT `categorypizza`
     FOREIGN KEY (`category`)
     REFERENCES `pizzeria`.`pizzacategory` (`idpizzacategory`))
 ENGINE = InnoDB
@@ -226,14 +223,14 @@ CREATE TABLE IF NOT EXISTS `pizzeria`.`order` (
   `idcomanda` INT NOT NULL,
   `dateandtime` DATETIME NOT NULL,
   `place` ENUM('DOMICILI', 'RECOLLIR') NOT NULL,
-  `npizzas` INT NOT NULL DEFAULT '0',
-  `nhamburguers` INT NOT NULL DEFAULT '0',
-  `ndrinks` INT NOT NULL DEFAULT '0',
+  `npizzas` INT NULL DEFAULT '0',
+  `nhamburguers` INT NULL DEFAULT '0',
+  `ndrinks` INT NULL DEFAULT '0',
   `amount` DOUBLE NOT NULL DEFAULT '0',
   `customer` INT NOT NULL,
-  `hamburguer` INT NOT NULL,
-  `pizza` INT NOT NULL,
-  `drink` INT NOT NULL,
+  `hamburguer` INT NULL,
+  `pizza` INT NULL,
+  `drink` INT NULL,
   `deliverytime` DATETIME NULL DEFAULT NULL,
   `delivery` INT NULL DEFAULT NULL,
   `employee` INT NOT NULL,
@@ -245,22 +242,22 @@ CREATE TABLE IF NOT EXISTS `pizzeria`.`order` (
   INDEX `pizza_idx` (`pizza` ASC) VISIBLE,
   INDEX `empleat_idx` (`employee` ASC) VISIBLE,
   INDEX `delivery_idx` (`delivery` ASC) VISIBLE,
-  CONSTRAINT `drink`
+  CONSTRAINT `drinkorder`
     FOREIGN KEY (`drink`)
     REFERENCES `pizzeria`.`drink` (`iddrink`),
-  CONSTRAINT `customer`
+  CONSTRAINT `customerorder`
     FOREIGN KEY (`customer`)
     REFERENCES `pizzeria`.`customer` (`idcustomer`),
-  CONSTRAINT `employee`
+  CONSTRAINT `employeeorder`
     FOREIGN KEY (`employee`)
     REFERENCES `pizzeria`.`employee` (`idemployee`),
-  CONSTRAINT `hamburguer`
+  CONSTRAINT `hamburguerorder`
     FOREIGN KEY (`hamburguer`)
     REFERENCES `pizzeria`.`hamburguer` (`idhamburguer`),
-  CONSTRAINT `pizza`
+  CONSTRAINT `pizzaorder`
     FOREIGN KEY (`pizza`)
     REFERENCES `pizzeria`.`pizza` (`idpizza`),
-  CONSTRAINT `delivery`
+  CONSTRAINT `deliveryorder`
     FOREIGN KEY (`delivery`)
     REFERENCES `pizzeria`.`employee` (`idemployee`)
     ON DELETE NO ACTION
